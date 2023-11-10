@@ -1,13 +1,15 @@
 import { User } from "../models/User";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express-serve-static-core";
 
 export const isAuthenticated = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
     if (req.headers.authorization) {
+      console.log("Middleware isAuthenticated");
+
       const receivedToken = req.headers.authorization.replace("Bearer ", "");
       const foundUser = await User.findOne({ token: receivedToken });
       if (foundUser) {

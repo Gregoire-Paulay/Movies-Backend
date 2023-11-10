@@ -13,6 +13,9 @@ const schema = z.object({
   API_KEY: z.string(),
   BEARER_TOKEN: z.string(),
   MONGODB_URI: z.string(),
+  CLOUDINARY_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 export const envVariables = schema.parse(process.env);

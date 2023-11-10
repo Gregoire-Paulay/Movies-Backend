@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from "express";
+const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
 const app: Application = express();
 app.use(express.json()); // permet de manipuler les paramètre de type body
@@ -11,6 +12,13 @@ const { PORT, NODE_ENV, MONGODB_URI } = envVariables;
 // MongoDB
 import mongoose from "mongoose";
 mongoose.connect(MONGODB_URI);
+
+// Authentification cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 app.get("/", (req: Request, res: Response) => {
   try {
