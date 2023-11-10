@@ -12,6 +12,7 @@ const schema = z.object({
     }),
   API_KEY: z.string(),
   BEARER_TOKEN: z.string(),
+  MONGODB_URI: z.string(),
 });
 
 export const envVariables = schema.parse(process.env);

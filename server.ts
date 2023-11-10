@@ -1,14 +1,16 @@
 import express, { Application, Request, Response } from "express";
+const cors = require("cors");
+const app: Application = express();
+app.use(express.json()); // permet de manipuler les paramètre de type body
+app.use(cors());
 
 // Variables d'environnement
 import { envVariables } from "./utils/envVariables";
-const { PORT, NODE_ENV } = envVariables;
+const { PORT, NODE_ENV, MONGODB_URI } = envVariables;
 
-// Import de mes routes
-import { moviesRouter } from "./routes/movies";
-
-const app: Application = express();
-app.use(express.json()); // permet de manipuler les paramètre de type body
+// MongoDB
+import mongoose from "mongoose";
+mongoose.connect(MONGODB_URI);
 
 app.get("/", (req: Request, res: Response) => {
   try {
@@ -19,7 +21,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Mes routes
+import { moviesRouter } from "./routes/movies";
 app.use(moviesRouter);
+import { userRouter } from "./routes/users";
+app.use(userRouter);
 
 // Toute les routes sauf celles crées au dessus arriveront ici
 app.all("*", (req, res) => {
