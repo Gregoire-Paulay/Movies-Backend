@@ -72,6 +72,34 @@ userRouter.post(
 );
 
 // 2 - Route pour se connecter
+userRouter.post("/user/login", async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const foundUser = await User.findOne({ email: email });
+    if (foundUser) {
+      const newSaltPassword = password + foundUser.salt;
+      const newHash = SHA256(newSaltPassword).toString(encBase64);
+      if (newHash === foundUser.hash) {
+        const responseObject = {
+          _id: foundUser._id,
+          token: foundUser.token,
+          account: { username: foundUser.account.username },
+        };
+        return res.status(200).json(responseObject);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "l'email ou mot de passe incorrecte" });
+      }
+    } else {
+      return res
+        .status(400)
+        .json({ message: "l'email ou mot de passe incorrecte" });
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // 3 - Route pour voir son profil
 
