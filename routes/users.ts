@@ -53,7 +53,7 @@ userRouter.post(
             public_id: "avatar",
           }
         );
-        newUser.account.avatar = cloudinaryResponse;
+        newUser.account.avatar = cloudinaryResponse.secure_url;
       }
 
       await newUser.save();
@@ -110,9 +110,9 @@ userRouter.get(
     try {
       // console.log(req.user);
       const { _id, email, account } = req.user;
-      let avatarResponse = [];
-      if (account.avatar?.secure_url) {
-        avatarResponse.push({ secure_url: account.avatar.secure_url });
+      let avatarResponse = "";
+      if (account.avatar) {
+        avatarResponse = account.avatar;
       }
       const responseObject = {
         id: _id,
@@ -142,15 +142,9 @@ userRouter.put(
             .json({ message: "This email is already used" });
         } else {
           let userNewMail = req.user;
-          if (userNewMail.email !== email) {
-            userNewMail.email = email;
-            userNewMail.save();
-            return res.status(202).json({ message: "Your email was modified" });
-          } else {
-            return res
-              .status(400)
-              .json({ message: "This is already your email" });
-          }
+          userNewMail.email = email;
+          userNewMail.save();
+          return res.status(202).json({ message: "Your email was modified" });
         }
       } else {
         return res.status(400).json({ message: "Invalid email in request" });
@@ -162,6 +156,38 @@ userRouter.put(
 );
 
 // 5 - Modifier username
+userRouter.put(
+  "/user/username",
+  isAuthenticated,
+  async (req: any, res: Response) => {
+    const { username } = req.body;
+    // console.log(req.user);
+
+    try {
+      if (username === req.user.account.username) {
+        return res
+          .status(400)
+          .json({ message: "This is already your username" });
+      }
+
+      const foundUser = await User.findOne<UserType>({
+        account: { username: username },
+      });
+      if (foundUser) {
+        return res
+          .status(400)
+          .json({ message: "This username is already used" });
+      } else {
+        let newUsername = req.user;
+        newUsername.account.username = username;
+        newUsername.save();
+        return res.status(202).json({ message: "Your username was modified" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
 
 // 6 - Modifier son image
 

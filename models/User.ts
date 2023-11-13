@@ -4,7 +4,7 @@ export type UserType = {
   email: string;
   account: {
     username: string;
-    avatar: object;
+    avatar: string;
   };
   salt: string;
   token: string;
