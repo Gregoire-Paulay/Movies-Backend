@@ -5,8 +5,9 @@ const uid = require("uid2");
 const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
 import { UploadedFile } from "express-fileupload";
-import { User, UserType } from "../models/User";
+import { User, UserType, UserTypewithId } from "../models/User";
 import { convertToBase64 } from "../utils/convertToBase64";
+import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const userRouter = express.Router();
 
@@ -75,7 +76,7 @@ userRouter.post(
 userRouter.post("/user/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const foundUser = await User.findOne({ email: email });
+    const foundUser = await User.findOne<UserTypewithId>({ email: email });
     if (foundUser) {
       const newSaltPassword = password + foundUser.salt;
       const newHash = SHA256(newSaltPassword).toString(encBase64);
@@ -102,11 +103,66 @@ userRouter.post("/user/login", async (req: Request, res: Response) => {
 });
 
 // 3 - Route pour voir son profil
+userRouter.get(
+  "/user/profile",
+  isAuthenticated,
+  async (req: any, res: Response) => {
+    try {
+      // console.log(req.user);
+      const { _id, email, account } = req.user;
+      let avatarResponse = [];
+      if (account.avatar?.secure_url) {
+        avatarResponse.push({ secure_url: account.avatar.secure_url });
+      }
+      const responseObject = {
+        id: _id,
+        email: email,
+        username: account.username,
+        avatar: avatarResponse,
+      };
+      res.status(200).json(responseObject);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
 
-// 4 - Modifier son image
+// 4 - Modifier email
+userRouter.put(
+  "/user/email",
+  isAuthenticated,
+  async (req: any, res: Response) => {
+    const { email } = req.body;
+    try {
+      if (email && typeof email === "string") {
+        const searchEmail = await User.findOne<UserType>({ email });
+        if (searchEmail) {
+          return res
+            .status(400)
+            .json({ message: "This email is already used" });
+        } else {
+          let userNewMail = req.user;
+          if (userNewMail.email !== email) {
+            userNewMail.email = email;
+            userNewMail.save();
+            return res.status(202).json({ message: "Your email was modified" });
+          } else {
+            return res
+              .status(400)
+              .json({ message: "This is already your email" });
+          }
+        }
+      } else {
+        return res.status(400).json({ message: "Invalid email in request" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
 
 // 5 - Modifier username
 
-// 6 - Modifier email
+// 6 - Modifier son image
 
 // 7 - Supprimez le compte

@@ -8,12 +8,12 @@ export const isAuthenticated = async (
 ) => {
   try {
     if (req.headers.authorization) {
-      console.log("Middleware isAuthenticated");
+      // console.log("Middleware isAuthenticated");
 
       const receivedToken = req.headers.authorization.replace("Bearer ", "");
       const foundUser = await User.findOne({ token: receivedToken });
       if (foundUser) {
-        console.log("Authorized");
+        // console.log("Authorized");
         req.user = foundUser;
         return next();
       } else {

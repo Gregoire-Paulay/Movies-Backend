@@ -10,6 +10,9 @@ export type UserType = {
   token: string;
   hash: string;
 };
+export interface UserTypewithId extends UserType {
+  _id: string;
+}
 
 const UserSchema = new mongoose.Schema<UserType>({
   email: { type: String, required: true },
