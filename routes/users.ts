@@ -65,9 +65,9 @@ userRouter.post(
       };
       // console.log(responseObject);
 
-      res.status(200).json(responseObject);
+      return res.status(200).json(responseObject);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 );
@@ -98,7 +98,7 @@ userRouter.post("/user/login", async (req: Request, res: Response) => {
         .json({ message: "l'email ou mot de passe incorrecte" });
     }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -120,9 +120,9 @@ userRouter.get(
         username: account.username,
         avatar: avatarResponse,
       };
-      res.status(200).json(responseObject);
+      return res.status(200).json(responseObject);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 );
@@ -150,7 +150,7 @@ userRouter.put(
         return res.status(400).json({ message: "Invalid email in request" });
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 );
@@ -184,11 +184,42 @@ userRouter.put(
         return res.status(202).json({ message: "Your username was modified" });
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 );
 
 // 6 - Modifier son image
+userRouter.put(
+  "/user/avatar",
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    try {
+      return res.status(202).json({ message: "Your avatar has been modified" });
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+);
 
 // 7 - Supprimez le compte
+userRouter.delete(
+  "/user/delete",
+  isAuthenticated,
+  async (req: any, res: Response) => {
+    const { email } = req.body;
+    try {
+      // console.log(req.user);
+      if (email === req.user.email) {
+        await User.findByIdAndDelete(req.user._id);
+        return res
+          .status(200)
+          .json({ message: "Your account has been deleted succesfully" });
+      } else {
+        return res.status(400).json({ message: "email not valid" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
