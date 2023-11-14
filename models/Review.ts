@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 export type ReviewTypePopulate = {
   user: {
-    id: string;
-    username: string;
-    avatar: string;
+    account: { username: string; avatar: string };
+    _id: string;
   };
   feeling: string;
   opinion: string;

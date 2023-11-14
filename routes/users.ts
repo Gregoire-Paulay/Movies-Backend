@@ -6,6 +6,7 @@ const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
 import { UploadedFile } from "express-fileupload";
 import { User, UserType, UserTypewithId } from "../models/User";
+import { Review } from "../models/Review";
 import { convertToBase64 } from "../utils/convertToBase64";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
@@ -237,7 +238,13 @@ userRouter.delete(
     try {
       // console.log(req.user);
       if (email === req.user.email) {
+        const foundUserReview = await Review.find({ user: req.user._id });
+        for (let i = 0; i < foundUserReview.length; i++) {
+          foundUserReview[i].user = "deleted account";
+          foundUserReview[i].save();
+        }
         await User.findByIdAndDelete(req.user._id);
+
         return res
           .status(200)
           .json({ message: "Your account has been deleted succesfully" });
