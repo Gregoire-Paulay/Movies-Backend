@@ -33,6 +33,8 @@ import { moviesRouter } from "./routes/movies";
 app.use(moviesRouter);
 import { userRouter } from "./routes/users";
 app.use(userRouter);
+import { reviewRouter } from "./routes/reviews";
+app.use(reviewRouter);
 
 // Toute les routes sauf celles crées au dessus arriveront ici
 app.all("*", (req, res) => {
