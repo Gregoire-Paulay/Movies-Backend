@@ -63,6 +63,7 @@ userRouter.post(
           username: username,
         },
         email: email,
+        token: token,
       };
       // console.log(responseObject);
 
