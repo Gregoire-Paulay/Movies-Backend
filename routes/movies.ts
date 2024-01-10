@@ -104,7 +104,7 @@ moviesRouter.get("/movies/popular", async (req: Request, res: Response) => {
 });
 
 // 2 - Route pour chercher un film
-moviesRouter.get("/movies/search", async (req: Request, res: Response) => {
+moviesRouter.post("/movies/search", async (req: Request, res: Response) => {
   const { title } = req.body;
   try {
     const response = await axios.get(
