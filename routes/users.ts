@@ -198,32 +198,30 @@ userRouter.put(
   fileUpload(),
   async (req: any, res: Response) => {
     try {
-      if (req.files) {
-        //On supprime l'ancien Avatar
-        const cloudinaryId = req.user.account.avatar.split("/")[9];
-        const avatarCloudinaryId = "movies/users/" + cloudinaryId + "/avatar";
-        // console.log(avatarCloudinaryId);
-        await cloudinary.uploader.destroy(avatarCloudinaryId);
+      // if (req.files) {
+      //On supprime l'ancien Avatar
+      const cloudinaryId = req.user.account.avatar.split("/")[9];
+      const avatarCloudinaryId = "movies/users/" + cloudinaryId + "/avatar";
+      // console.log(avatarCloudinaryId);
+      await cloudinary.uploader.destroy(avatarCloudinaryId);
 
-        // On ajoute le nouvel avatar
-        const pictureToUpload: UploadedFile | UploadedFile[] | undefined =
-          req.files.avatar;
-        const cloudinaryResponse = await cloudinary.uploader.upload(
-          convertToBase64(pictureToUpload),
-          {
-            folder: `movies/users/${req.user._id}`,
-            public_id: "avatar",
-          }
-        );
-        req.user.account.avatar = cloudinaryResponse.secure_url;
-        await req.user.save();
+      // On ajoute le nouvel avatar
+      const pictureToUpload: UploadedFile | UploadedFile[] | undefined =
+        req.files.avatar;
+      const cloudinaryResponse = await cloudinary.uploader.upload(
+        convertToBase64(pictureToUpload),
+        {
+          folder: `movies/users/${req.user._id}`,
+          public_id: "avatar",
+        }
+      );
+      req.user.account.avatar = cloudinaryResponse.secure_url;
+      await req.user.save();
 
-        return res
-          .status(202)
-          .json({ message: "Your avatar has been modified" });
-      } else {
-        return res.status(400).json({ message: "missing picture to transfer" });
-      }
+      return res.status(202).json({ message: "Your avatar has been modified" });
+      // } else {
+      //   return res.status(400).json({ message: "missing picture to transfer" });
+      // }
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
