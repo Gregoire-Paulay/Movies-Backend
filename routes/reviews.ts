@@ -15,7 +15,7 @@ reviewRouter.post(
   isAuthenticated,
   async (req: any, res: Response) => {
     try {
-      const { title, feeling, opinion } = req.body;
+      const { title, feeling, opinion, movieName } = req.body;
       const { movieId } = req.params;
 
       if (title && feeling && opinion && movieId) {
@@ -31,6 +31,7 @@ reviewRouter.post(
             feeling,
             opinion,
             movieId,
+            movieName,
             date: datemoment().format("YYYY-MM-DD"),
             like: [],
             dislike: [],
@@ -61,6 +62,7 @@ reviewRouter.post(
               feeling,
               opinion,
               movieId,
+              movieName,
               date: datemoment().format("YYYY-MM-DD"),
               like: [],
               dislike: [],

@@ -9,6 +9,7 @@ export type ReviewTypePopulate = {
   opinion: string;
   date: string;
   movieId: number;
+  movieName: string;
   title: string;
   like: [];
   dislike: [];
@@ -23,6 +24,7 @@ export type ReviewType = {
   opinion: string;
   date: string;
   movieId: number;
+  movieName: string;
   title: string;
   like: [];
   dislike: [];
@@ -38,6 +40,7 @@ const ReviewSchema = new mongoose.Schema<ReviewType>({
   opinion: String,
   date: String,
   movieId: Number,
+  movieName: String,
   title: String,
   like: Array,
   dislike: Array,
