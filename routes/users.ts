@@ -38,7 +38,7 @@ userRouter.post(
       const hash = SHA256(saltPassword).toString(encBase64);
       const newUser = new User({
         email,
-        account: { username },
+        account: { username, avatar: "" },
         salt,
         token,
         hash,
