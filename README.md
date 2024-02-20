@@ -49,7 +49,7 @@ Description : Create Review for a movie
 | opinion   | review description   | yes      |
 | movieName | Name of the movie    | yes      |
 
-<br/>
+
 | params  | info              | required |
 | ------- | ----------------- | -------- |
 | movieId | movie id from API | yes      |
@@ -77,7 +77,7 @@ Description: Modify your review
 | ------ | ---------------- | -------- |
 | id     | id of the review | yes      |
 
-<br/>
+
 | body      | info                 | required |
 | --------- | -------------------- | -------- |
 | title     | Review title         | yes      |
