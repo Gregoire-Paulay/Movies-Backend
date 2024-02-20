@@ -170,7 +170,7 @@ Clone this repository :
 
 ```
 git clone https://github.com/Gregoire-Paulay/Movies-Backend.git
-cd Marvel-Back
+cd Movies-Backend
 ```
 
 Install packages :
